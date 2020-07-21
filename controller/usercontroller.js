@@ -1,12 +1,3 @@
-/*handlers */
-const fs = require('fs');
-const express = require('express');
-const router = express.Router();
-
-const toursData = JSON.parse(
-    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-);
-
 exports.getAllUsers = (req, res) => {
     res.status(500).json({
         status: 'error',
