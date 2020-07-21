@@ -5,9 +5,10 @@ const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
 
 /*middleware*/
-
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev'));
+}
 app.use(express.json());
-app.use(morgan('dev'));
 
 // app.post('/api/v1/tours', createTour);
 // app.get('/api/v1/tours', getAllTours);
