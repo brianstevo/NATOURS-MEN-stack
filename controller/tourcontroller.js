@@ -1,4 +1,4 @@
-const Tour = require('./../models/tourModel')
+const Tour = require('./../models/tourModel');
 
 // const toursData = JSON.parse(
 //     fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -12,42 +12,106 @@ const Tour = require('./../models/tourModel')
 // };
 
 /*route handler*/
-exports.getAllTours = (req, res) => {
-    res.status(200).json({
-        status: 'success'
-    });
+exports.getAllTours = async (req, res) => {
+	try {
+		const allTours = await Tour.find();
+		res.status(200).json({
+			status: 'success',
+			results: allTours.length,
+			data: {
+				tour: allTours,
+			},
+		});
+	} catch (err) {
+		res.status(404).json({
+			status: 'unsuccessful',
+		});
+	}
 };
 /*im not adding object into file use writeFile  */
-exports.createTour = (req, res) => {
-    // const newId = toursData[toursData.length - 1].id + 1;
-    // const newTours = Object.assign({
-    //         id: newId,
-    //     },
-    //     req.body
-    // );
-    // toursData.push(newTours);
-    res.status(200).json({
-        status: 'success'
-    });
+exports.createTour = async (req, res) => {
+	try {
+		console.log(req.body);
+		const newTour = await Tour.create(req.body);
+		res.status(201).json({
+			status: 'success',
+			data: {
+				tour: newTour,
+			},
+		});
+	} catch (err) {
+		res.status(404).json({
+			status: 'unsuccessful',
+			message: 'invalid',
+		});
+	}
+	// const newId = toursData[toursData.length - 1].id + 1;
+	// const newTours = Object.assign({
+	//         id: newId,
+	//     },
+	//     req.body
+	// );
+	// toursData.push(newTours);
 };
 
-exports.getTour = (req, res) => {
-    // const id = req.params.id * 1;
-    // const toursIdData = toursData.find((el) => {
-    //     return el.id === id;
-    // });
-    res.status(200).json({
-        status: 'success'
-    });
+exports.getTour = async (req, res) => {
+	try {
+		const tour = await Tour.findById(req.params.id);
+		/*same as our.findOne({_id:req.params.id})
+                but findById is mongoose method */
+		res.status(200).json({
+			status: 'success',
+			data: {
+				tour: tour,
+			},
+		});
+	} catch (err) {
+		res.status(404).json({
+			status: 'unsuccessful',
+			message: 'invalid',
+		});
+	}
+	// const id = req.params.id * 1;
+	// const toursIdData = toursData.find((el) => {
+	//     return el.id === id;
+	// });
 };
 
-exports.updateTour = (req, res) => {
-    res.status(200).json({
-        status: 'success'
-    });
+exports.updateTour = async (req, res) => {
+	try {
+		console.log(req.body);
+		const updatetour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+			runValidators: true,
+		});
+		/*same as our.findOne({_id:req.params.id})
+                but findById is mongoose method */
+		res.status(200).json({
+			status: 'success',
+			data: {
+				updatetour,
+			},
+		});
+	} catch (err) {
+		res.status(404).json({
+			status: 'unsuccessful',
+			message: err,
+		});
+	}
 };
-exports.deleteTour = (req, res) => {
-    res.status(204).json({
-        status: 'success'
-    });
+exports.deleteTour = async (req, res) => {
+	try {
+		console.log(req.body);
+		await Tour.findByIdAndDelete(req.params.id);
+		/*same as our.findOne({_id:req.params.id})
+                but findById is mongoose method */
+		res.status(200).json({
+			status: 'deletion success',
+		});
+	} catch (err) {
+		res.status(404).json({
+			status: 'unsuccessful',
+			message: err,
+		});
+	}
 };
