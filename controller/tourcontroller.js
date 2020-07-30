@@ -24,11 +24,19 @@ exports.getAllTours = async (req, res) => {
 
 		/*advance filtering */
 		let reqString = JSON.stringify(reqObj);
-		console.log(reqString);
+		// console.log(reqString);
 		reqString = reqString.replace(/\b(gte|gt|lte|lt)\b/g, replaceText => `$${replaceText}`);
-		console.log(JSON.parse(reqString));
+		// console.log(JSON.parse(reqString));
 
-		const query = await Tour.find(JSON.parse(reqString));
+		let query = Tour.find(JSON.parse(reqString));
+
+		/*sort filter */
+		if (req.query.sort) {
+			const sortBy = req.query.sort.split(',').join(' ');
+			// console.log(req.query.sort.split(','));
+			// console.log(sortBy);
+			query = query.sort(sortBy);
+		}
 
 		/** execute query*/
 		const allTours = await query;
