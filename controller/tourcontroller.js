@@ -36,6 +36,19 @@ exports.getAllTours = async (req, res) => {
 			// console.log(req.query.sort.split(','));
 			// console.log(sortBy);
 			query = query.sort(sortBy);
+		} else {
+			//default based on createdAt (specified in model)
+			query = query.sort('-createdAt');
+		}
+		/*project/field limiting/select */
+		if (req.query.fields) {
+			const fieldBy = req.query.fields.split(',').join(' ');
+			// console.log(req.query.sort.split(','));
+			// console.log(sortBy);
+			query = query.select(fieldBy);
+		} else {
+			//default based on createdAt (specified in model)
+			query = query.select('-__v');
 		}
 
 		/** execute query*/
